@@ -31,7 +31,20 @@ This is a simple Group chat application built with React, TypeScript, and Fireba
 - **TailwindCSS**: A utility-first CSS framework.
 - **Recharts**: Charting library for React.
 
+### Screenshots
+
+![Screenshot 1](https://imgur.com/cyfsKIn.png)
+![Screenshot 2](https://imgur.com/mSCUoZC.png)
+![Screenshot 3](https://imgur.com/ds7NbbH.png)
+![Screenshot 4](https://imgur.com/zZlW2b2.png)
+![Screenshot 5](https://imgur.com/XL5s2g7.png)
+![Screenshot 6](https://imgur.com/wcIUFBi.png)
+![Screenshot 7](https://imgur.com/UkvHemu.png)
+
+
+
+
 you can join the Group Chat : [Chat Room](https://bleepr-41a61.web.app)
 
-If you like this project, please give it a star
+If you like this project, please give it a star and share it with your friends. ❤️
 Have fun!
