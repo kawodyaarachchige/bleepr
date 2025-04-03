@@ -22,10 +22,17 @@ interface Message {
   timestamp: number
   imageUrl?: string
 }
+interface TypingUser {
+  id: string
+  name: string
+  timestamp: number
+}
 interface ChatContextType {
   messages: Message[]
   sendMessage: (text: string, image?: File) => Promise<void>
   uploadProgress: number
+  setUserTyping: (isTyping: boolean) => void
+  typingUsers: TypingUser[]
 }
 const ChatContext = createContext<ChatContextType | null>(null)
 export const useChat = () => {
@@ -40,7 +47,32 @@ export const ChatProvider: React.FC<{
 }> = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [typingUsers, setTypingUsers] = useState<TypingUser[]>([])
   const { currentUser } = useAuth()
+  useEffect(() => {
+    if (!currentUser) return
+    const typingRef = ref(database, 'typing')
+    onValue(typingRef, (snapshot) => {
+      const data = snapshot.val()
+      if (data) {
+        const now = Date.now()
+        const activeTypers = Object.entries(data)
+            .map(([id, value]: [string, any]) => ({
+              id,
+              name: value.name,
+              timestamp: value.timestamp,
+            }))
+            .filter(
+                (user) =>
+                    user.id !== currentUser.uid && now - user.timestamp < 10000, // Remove typing indicator after 10 seconds
+            )
+        setTypingUsers(activeTypers)
+      } else {
+        setTypingUsers([])
+      }
+    })
+    return () => off(typingRef)
+  }, [currentUser])
   useEffect(() => {
     if (!currentUser) return
     const messagesRef = ref(database, 'messages')
@@ -63,10 +95,20 @@ export const ChatProvider: React.FC<{
         setMessages([])
       }
     })
-    return () => {
-      off(messagesRef)
-    }
+    return () => off(messagesRef)
   }, [currentUser])
+  const setUserTyping = async (isTyping: boolean) => {
+    if (!currentUser) return
+    const typingRef = ref(database, `typing/${currentUser.uid}`)
+    if (isTyping) {
+      await set(typingRef, {
+        name: currentUser.email?.split('@')[0] || 'Anonymous',
+        timestamp: Date.now(),
+      })
+    } else {
+      await set(typingRef, null)
+    }
+  }
   const sendMessage = async (text: string, image?: File) => {
     if (!currentUser || (!text.trim() && !image)) return
     let imageUrl = ''
@@ -91,6 +133,7 @@ export const ChatProvider: React.FC<{
         )
       })
     }
+    await setUserTyping(false)
     const messagesRef = ref(database, 'messages')
     const newMessageRef = push(messagesRef)
     await set(newMessageRef, {
@@ -108,6 +151,8 @@ export const ChatProvider: React.FC<{
     messages,
     sendMessage,
     uploadProgress,
+    setUserTyping,
+    typingUsers,
   }
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }

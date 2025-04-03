@@ -10,6 +10,7 @@ This is a simple Group chat application built with React, TypeScript, and Fireba
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![ShadCN](https://img.shields.io/badge/ShadCN-2F7BB7?style=for-the-badge&logo=react&logoColor=white)](https://shadcn.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+
 [![Recharts](https://img.shields.io/badge/Recharts-3182CE?style=for-the-badge&logo=react&logoColor=white)](https://recharts.org/en-US/)
 
 ### Features
