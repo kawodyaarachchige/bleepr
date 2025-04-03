@@ -1,5 +1,8 @@
 import './index.css';
 import React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { App } from "./App";
-render(<App />, document.getElementById("root"));
+
+// Use createRoot for React 18 and render the app
+const root = createRoot(document.getElementById("root")!);
+root.render(<App />);
